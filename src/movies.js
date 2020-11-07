@@ -64,14 +64,18 @@ function orderAlphabetically(list) {
   return listOfTitles;
 }
 // BONUS - Iteration 7: Time Format - Turn duration of the movies from hours to minutes
+function toMinutes(hoursString) {
+    const hour = Number(hoursString.match(/[1-9](?=h)/)||0);
+    const min = Number(hoursString.match(/[0-9]+(?=min)/)||0);
+    return hour*60 + min;
+}
+
 function turnHoursToMinutes(list) {
-  const newList = list.map((movie) => {
-    const durationArray = movie.duration.split(' ');
-    const durationNumberArray = durationArray.map((string) => parseInt(string));
-    const minutes = durationNumberArray[0] * 60 + durationNumberArray;
-    movie.duration = minutes;
-    return newList;
-  });
-  return newList;
+    const clonedList = [...list];
+    clonedList.map((movie) => {
+        movie.duration = toMinutes(movie.duration);
+        return movie;
+    })
+    return clonedList;
 }
 // BONUS - Iteration 8: Best yearly rate average - Best yearly rate average
