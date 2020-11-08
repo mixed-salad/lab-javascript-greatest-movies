@@ -64,18 +64,60 @@ function orderAlphabetically(list) {
   return listOfTitles;
 }
 // BONUS - Iteration 7: Time Format - Turn duration of the movies from hours to minutes
+
 function toMinutes(hoursString) {
-    const hour = Number(hoursString.match(/[1-9](?=h)/)||0);
-    const min = Number(hoursString.match(/[0-9]+(?=min)/)||0);
-    return hour*60 + min;
+  const hour = Number(hoursString.match(/[1-9](?=h)/g));
+  const min = Number(hoursString.match(/[0-9]+(?=min)/g));
+  return hour * 60 + min;
 }
 
 function turnHoursToMinutes(list) {
-    const clonedList = [...list];
-    clonedList.map((movie) => {
-        movie.duration = toMinutes(movie.duration);
-        return movie;
-    })
-    return clonedList;
+  const clonedList = [...list];
+  const listWithMinutes = clonedList.map((movie) => {
+    movie.duration = toMinutes(movie.duration);
+    return movie;
+  });
+  return listWithMinutes;
 }
+
 // BONUS - Iteration 8: Best yearly rate average - Best yearly rate average
+function bestYearAvg(list) {
+  if(!list.length){
+    return null;
+  } 
+  const years = []
+  function isExist(movie){
+    return years.some(value => {return value.year === movie.year});
+  }
+
+  for(let movie of list) {
+    if(!isExist(movie)){
+      years.push({'year':movie.year,
+      'count': 1,
+      'sumRate': movie.rate,
+      'averageRate': movie.rate})
+    }else{
+      const insertIndex = years.findIndex((movie, index) => {return years[index].year === movie.year});
+      years[insertIndex].sumRate += movie.rate;
+      years[insertIndex].count++;
+      years[insertIndex].averageRate = Math.round(years[insertIndex].sumRate / years[insertIndex].count*10)/10;
+    }
+  }
+  console.log(years);
+  let highestRate = 0;
+   for(let i = 0; i < years.length; i++) {
+     if(years[i].averageRate > highestRate) {
+       highestRate = years[i].averageRate;
+     } 
+   }
+  console.log(highestRate);
+  const highestRatedYear = years.filter((movie) => {
+    return movie.averageRate === highestRate; 
+  })
+  if(highestRatedYear.length === 1){
+    return `The best year was ${highestRatedYear[0].year} with an average rate of ${highestRatedYear[0].averageRate}`
+  }else{
+    const tieBreaker = orderByYear(highestRatedYear);
+    return `The best year was ${tieBreaker[0].year} with an average rate of ${tieBreaker[0].averageRate}`
+    };
+  }
