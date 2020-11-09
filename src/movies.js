@@ -6,8 +6,8 @@ function getAllDirectors(list) {
 // _Bonus_: It seems some of the directors had directed multiple movies so they will pop up multiple times in the array of directors. How could you "clean" a bit this array and make it unified (without duplicates)?
 function listWithoutDuplicates(list) {
   const newList = [...list];
-  for(let i = 0; i < list.length; i++) {
-    if(!list.includes(list[i])){
+  for (let i = 0; i < list.length; i++) {
+    if (!list.includes(list[i])) {
       newList.push(list[i]);
     }
   }
@@ -81,7 +81,7 @@ function toMinutes(hoursString) {
 }
 
 function turnHoursToMinutes(list) {
-  const clonedList = [...list];
+  const clonedList = JSON.parse(JSON.stringify(list)) ;
   const listWithMinutes = clonedList.map((movie) => {
     movie.duration = toMinutes(movie.duration);
     return movie;
@@ -91,42 +91,51 @@ function turnHoursToMinutes(list) {
 
 // BONUS - Iteration 8: Best yearly rate average - Best yearly rate average
 function bestYearAvg(list) {
-  if(!list.length){
+  if (!list.length) {
     return null;
-  } 
-  const years = []
-  function isExist(movie){
-    return years.some(value => {return value.year === movie.year});
+  }
+  const years = [];
+  function isExist(movie) {
+    return years.some((value) => {
+      return value.year === movie.year;
+    });
   }
 
-  for(let movie of list) {
-    if(!isExist(movie)){
-      years.push({'year':movie.year,
-      'count': 1,
-      'sumRate': movie.rate,
-      'averageRate': movie.rate})
-    }else{
-      const insertIndex = years.findIndex((movie, index) => {return years[index].year === movie.year});
+  for (let movie of list) {
+    if (!isExist(movie)) {
+      years.push({
+        year: movie.year,
+        count: 1,
+        sumRate: movie.rate,
+        averageRate: movie.rate
+      });
+    } else {
+      const insertIndex = years.findIndex((movie, index) => {
+        return years[index].year === movie.year;
+      });
       years[insertIndex].sumRate += movie.rate;
       years[insertIndex].count++;
-      years[insertIndex].averageRate = Math.round(years[insertIndex].sumRate / years[insertIndex].count*10)/10;
+      years[insertIndex].averageRate =
+        Math.round(
+          (years[insertIndex].sumRate / years[insertIndex].count) * 10
+        ) / 10;
     }
   }
   console.log(years);
   let highestRate = 0;
-   for(let i = 0; i < years.length; i++) {
-     if(years[i].averageRate > highestRate) {
-       highestRate = years[i].averageRate;
-     } 
-   }
+  for (let i = 0; i < years.length; i++) {
+    if (years[i].averageRate > highestRate) {
+      highestRate = years[i].averageRate;
+    }
+  }
   console.log(highestRate);
   const highestRatedYear = years.filter((movie) => {
-    return movie.averageRate === highestRate; 
-  })
-  if(highestRatedYear.length === 1){
-    return `The best year was ${highestRatedYear[0].year} with an average rate of ${highestRatedYear[0].averageRate}`
-  }else{
+    return movie.averageRate === highestRate;
+  });
+  if (highestRatedYear.length === 1) {
+    return `The best year was ${highestRatedYear[0].year} with an average rate of ${highestRatedYear[0].averageRate}`;
+  } else {
     const tieBreaker = orderByYear(highestRatedYear);
-    return `The best year was ${tieBreaker[0].year} with an average rate of ${tieBreaker[0].averageRate}`
-    };
+    return `The best year was ${tieBreaker[0].year} with an average rate of ${tieBreaker[0].averageRate}`;
   }
+}
