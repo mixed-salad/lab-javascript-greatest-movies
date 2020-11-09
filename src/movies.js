@@ -90,30 +90,31 @@ function turnHoursToMinutes(list) {
 }
 
 // BONUS - Iteration 8: Best yearly rate average - Best yearly rate average
+
+const years = [];
+function isExist(movie) {
+    return years.some((value, index) => {
+      return value.year === movie.year;
+    });
+}    
 function bestYearAvg(list) {
   if (!list.length) {
     return null;
   }
-  const years = [];
-  function isExist(movie) {
-    return years.some((value) => {
-      return value.year === movie.year;
-    });
-  }
-
+  
   for (let movie of list) {
     if (!isExist(movie)) {
       years.push({
-        year: movie.year,
-        count: 1,
-        sumRate: movie.rate,
-        averageRate: movie.rate
+        'year': movie.year,
+        'count': 1,
+        'sumRate': movie.rate,
+        'averageRate': movie.rate
       });
     } else {
-      const insertIndex = years.findIndex((movie, index) => {
+      const insertIndex = years.findIndex((value, index) => {
         return years[index].year === movie.year;
       });
-      years[insertIndex].sumRate += movie.rate;
+      years[insertIndex].sumRate = Math.round((years[insertIndex].sumRate + movie.rate)*10)/10;
       years[insertIndex].count++;
       years[insertIndex].averageRate =
         Math.round(
@@ -121,6 +122,7 @@ function bestYearAvg(list) {
         ) / 10;
     }
   }
+
   console.log(years);
   let highestRate = 0;
   for (let i = 0; i < years.length; i++) {
@@ -128,6 +130,7 @@ function bestYearAvg(list) {
       highestRate = years[i].averageRate;
     }
   }
+
   console.log(highestRate);
   const highestRatedYear = years.filter((movie) => {
     return movie.averageRate === highestRate;
